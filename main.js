@@ -14,8 +14,8 @@ const submitHandler = (event) => {
       msg.remove("error");
     }, 3000);
   } else {
-    console.log(name.value);
-    console.log(email.value);
+    localStorage.setItem("userName", name.value);
+    localStorage.setItem("userEmail", email.value);
     msg.innerText = "Successfully logged the values.";
     msg.classList.add("success");
 
