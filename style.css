@@ -100,5 +100,9 @@ header {
   border: 0;
   border-radius: 5px;
   cursor: pointer;
-  margin-left: 50px;
+  margin-left: 20px;
+}
+
+.email {
+  margin: 0 5px 0 5px;
 }

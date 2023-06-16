@@ -30,11 +30,19 @@ const submitHandler = (event) => {
     // add the user details in the list.
     let newli = document.createElement("li");
     newli.className = "item";
-    newli.appendChild(
-      document.createTextNode(
-        name.value + " " + email.value + " " + phone.value
-      )
-    );
+
+    let namespan = document.createElement("span");
+    let emailspan = document.createElement("span");
+    let phonespan = document.createElement("span");
+    namespan.className = "name";
+    emailspan.className = "email";
+    phonespan.className = "phone";
+    namespan.appendChild(document.createTextNode(name.value));
+    emailspan.appendChild(document.createTextNode(email.value));
+    phonespan.appendChild(document.createTextNode(phone.value));
+    newli.appendChild(namespan);
+    newli.appendChild(emailspan);
+    newli.appendChild(phonespan);
 
     // add delete button to the list
     let delbtn = document.createElement("button");
@@ -75,8 +83,8 @@ btn.addEventListener("click", (e) => {
 // });
 
 const removeUser = (e) => {
-  let email = e.target.parentElement.firstChild.textContent.split(" ")[1];
-  console.log(e);
+  let li = e.target.parentElement;
+  let email = li.querySelector(".email").textContent;
   localStorage.removeItem(email);
-  itemList.removeChild(e.target.parentElement);
+  itemList.removeChild(li);
 };
