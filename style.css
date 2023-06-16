@@ -49,6 +49,14 @@ header {
   border: 1px solid #ccc;
 }
 
+#my-form input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
 .btn {
   display: block;
   width: 100%;
@@ -58,6 +66,7 @@ header {
   color: #fff;
   border-radius: 5px;
   margin: 5px 0;
+  cursor: pointer;
 }
 
 .btn:hover {
@@ -81,4 +90,15 @@ header {
   color: #fff;
   padding: 5px;
   margin: 5px;
+}
+
+.delete {
+  background: red;
+  color: #fff;
+  padding: 5px;
+  margin: 5px;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 50px;
 }
