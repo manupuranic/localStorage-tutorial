@@ -1,6 +1,7 @@
 const btn = document.querySelector(".btn");
 const li = document.querySelector(".items").firstElementChild;
 const msg = document.querySelector(".msg");
+const itemList = document.querySelector(".items");
 
 const submitHandler = (event) => {
   event.preventDefault();
@@ -18,9 +19,16 @@ const submitHandler = (event) => {
       name: name.value,
       email: email.value,
     };
-    localStorage.setItem("userDetails", JSON.stringify(userDetails));
+    localStorage.setItem(email.value, JSON.stringify(userDetails));
     msg.innerText = "Successfully logged the values.";
     msg.classList.add("success");
+
+    // add the user details in the list.
+    let newli = document.createElement("li");
+    newli.className = "item";
+    newli.appendChild(document.createTextNode(name.value + " " + email.value));
+
+    itemList.appendChild(newli);
 
     setTimeout(() => {
       msg.remove("success");
@@ -47,5 +55,3 @@ li.addEventListener("mouseover", () => {
   li.style.background = "black";
   li.style.color = "white";
 });
-
-document.querySelector(".items").firstElementChild.style.background = "teal";
