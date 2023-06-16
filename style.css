@@ -106,3 +106,14 @@ header {
 .email {
   margin: 0 5px 0 5px;
 }
+
+.edit {
+  background: green;
+  color: #fff;
+  padding: 5px;
+  margin: 5px;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 2px;
+}

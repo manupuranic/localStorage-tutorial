@@ -53,6 +53,15 @@ const submitHandler = (event) => {
 
     delbtn.addEventListener("click", removeUser);
 
+    // add edit button to the list
+    let editbtn = document.createElement('button');
+    editbtn.className = "edit";
+    editbtn.appendChild(document.createTextNode("Edit"));
+
+    newli.appendChild(editbtn);
+
+    editbtn.addEventListener("click", editUser);
+
     itemList.appendChild(newli);
 
     setTimeout(() => {
@@ -88,3 +97,15 @@ const removeUser = (e) => {
   localStorage.removeItem(email);
   itemList.removeChild(li);
 };
+
+const editUser = (e) => {
+  let li = e.target.parentElement;
+  let name = li.querySelector(".name").textContent;
+  let email = li.querySelector(".email").textContent;
+  let phone = li.querySelector(".phone").textContent;
+  localStorage.removeItem(email);
+  itemList.removeChild(li);
+  document.getElementById("name").value = name;
+  document.getElementById("email").value = email;
+  document.getElementById("phone").value = phone;
+}
