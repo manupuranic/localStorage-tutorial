@@ -1,3 +1,6 @@
+const baseURL =
+  "https://crudcrud.com/api/16ef0de04fbb4c25a7cc20e0b7c11a5f/appointmentdata";
+
 const btn = document.querySelector(".btn");
 const li = document.querySelector(".items").firstElementChild;
 const msg = document.querySelector(".msg");
@@ -6,12 +9,14 @@ const itemList = document.querySelector(".items");
 const del = document.querySelector(".delete");
 
 const showUserOutput = (data) => {
-  let name = data.name;
-  let email = data.email;
-  let phone = data.phone;
+  const name = data.name;
+  const email = data.email;
+  const phone = data.phone;
+  const uid = data._id;
   // add the user details in the list.
   let newli = document.createElement("li");
   newli.className = "item";
+  newli.id = uid;
 
   let namespan = document.createElement("span");
   let emailspan = document.createElement("span");
@@ -49,14 +54,16 @@ const showUserOutput = (data) => {
 
 document.addEventListener("DOMContentLoaded", (event) => {
   axios
-    .get(
-      "https://crudcrud.com/api/16ef0de04fbb4c25a7cc20e0b7c11a5f/appointmentdata"
-    )
+    .get(baseURL)
     .then((res) => {
       const userList = res.data;
-      userList.forEach((user) => {
-        showUserOutput(user);
-      });
+      if (userList.length > 0) {
+        userList.forEach((user) => {
+          showUserOutput(user);
+        });
+      } else {
+        itemList.innerHTML = "<h4>No users available</h4>";
+      }
     })
     .catch((err) => {
       msg.innerText = `Something went wrong: ${err.message}`;
@@ -86,10 +93,7 @@ const submitHandler = (event) => {
       phone: phone.value,
     };
     axios
-      .post(
-        "https://crudcrud.com/api/16ef0de04fbb4c25a7cc20e0b7c11a5f/appointmentdata",
-        userDetails
-      )
+      .post(baseURL, userDetails)
       .then((res) => {
         showUserOutput(res.data);
         msg.innerText = "Successfully added the user.";
@@ -114,9 +118,25 @@ const submitHandler = (event) => {
 };
 
 const removeUser = (e) => {
-  let li = e.target.parentElement;
-  let email = li.querySelector(".email").textContent;
-  localStorage.removeItem(email);
+  const li = e.target.parentElement;
+  const uid = li.id;
+  axios
+    .delete(`${baseURL}/${uid}`)
+    .then(() => {
+      msg.innerText = "Successfully deleted the user.";
+      msg.classList.add("success");
+      setTimeout(() => {
+        msg.remove("success");
+      }, 3000);
+    })
+    .catch((err) => {
+      msg.innerText = `Something went wrong: ${err.message}`;
+      msg.classList.add("error");
+      setTimeout(() => {
+        msg.remove("error");
+      }, 3000);
+    });
+  // localStorage.removeItem(email);
   itemList.removeChild(li);
 };
 
