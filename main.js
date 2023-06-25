@@ -47,6 +47,26 @@ const showUserOutput = (data) => {
   itemList.appendChild(newli);
 };
 
+document.addEventListener("DOMContentLoaded", (event) => {
+  axios
+    .get(
+      "https://crudcrud.com/api/16ef0de04fbb4c25a7cc20e0b7c11a5f/appointmentdata"
+    )
+    .then((res) => {
+      const userList = res.data;
+      userList.forEach((user) => {
+        showUserOutput(user);
+      });
+    })
+    .catch((err) => {
+      msg.innerText = `Something went wrong: ${err.message}`;
+      msg.classList.add("error");
+      setTimeout(() => {
+        msg.remove("error");
+      }, 3000);
+    });
+});
+
 const submitHandler = (event) => {
   event.preventDefault();
   const name = document.getElementById("name");
