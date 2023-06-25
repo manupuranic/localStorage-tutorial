@@ -2,7 +2,6 @@ const baseURL =
   "https://crudcrud.com/api/16ef0de04fbb4c25a7cc20e0b7c11a5f/appointmentdata";
 
 const btn = document.querySelector(".btn");
-const li = document.querySelector(".items").firstElementChild;
 const msg = document.querySelector(".msg");
 const itemList = document.querySelector(".items");
 
@@ -52,7 +51,8 @@ const showUserOutput = (data) => {
   itemList.appendChild(newli);
 };
 
-document.addEventListener("DOMContentLoaded", (event) => {
+function getUsers(event) {
+  itemList.replaceChildren();
   axios
     .get(baseURL)
     .then((res) => {
@@ -72,13 +72,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
         msg.remove("error");
       }, 3000);
     });
-});
+}
+document.addEventListener("DOMContentLoaded", getUsers);
 
 const submitHandler = (event) => {
   event.preventDefault();
   const name = document.getElementById("name");
   const email = document.getElementById("email");
   const phone = document.getElementById("phone");
+  const uid = document.querySelector(".btn").id;
+
   if (name.value === "" || email.value === "") {
     msg.innerText = "Please enter all the fields";
     msg.classList.add("error");
@@ -92,23 +95,46 @@ const submitHandler = (event) => {
       email: email.value,
       phone: phone.value,
     };
-    axios
-      .post(baseURL, userDetails)
-      .then((res) => {
-        showUserOutput(res.data);
-        msg.innerText = "Successfully added the user.";
-        msg.classList.add("success");
-        setTimeout(() => {
-          msg.remove("success");
-        }, 3000);
-      })
-      .catch((err) => {
-        msg.innerText = `Something went wrong: ${err.message}`;
-        msg.classList.add("error");
-        setTimeout(() => {
-          msg.remove("error");
-        }, 3000);
-      });
+    if (uid !== "") {
+      axios
+        .put(`${baseURL}/${uid}`, userDetails)
+        .then((res) => {
+          getUsers();
+          msg.innerText = "Successfully updated the user.";
+          msg.classList.add("success");
+          setTimeout(() => {
+            msg.remove("success");
+          }, 3000);
+        })
+        .catch((err) => {
+          msg.innerText = `Something went wrong: ${err.message}`;
+          msg.classList.add("error");
+          setTimeout(() => {
+            msg.remove("error");
+          }, 3000);
+        });
+      document.querySelector(".btn").value = "Submit";
+      document.querySelector(".btn").id = "";
+    } else {
+      axios
+        .post(baseURL, userDetails)
+        .then((res) => {
+          showUserOutput(res.data);
+          msg.innerText = "Successfully added the user.";
+          msg.classList.add("success");
+          setTimeout(() => {
+            msg.remove("success");
+          }, 3000);
+        })
+        .catch((err) => {
+          msg.innerText = `Something went wrong: ${err.message}`;
+          msg.classList.add("error");
+          setTimeout(() => {
+            msg.remove("error");
+          }, 3000);
+        });
+    }
+
     // localStorage.setItem(email.value, JSON.stringify(userDetails));
 
     name.value = "";
@@ -141,11 +167,14 @@ const removeUser = (e) => {
 };
 
 const editUser = (e) => {
-  let li = e.target.parentElement;
-  let name = li.querySelector(".name").textContent;
-  let email = li.querySelector(".email").textContent;
-  let phone = li.querySelector(".phone").textContent;
-  localStorage.removeItem(email);
+  const li = e.target.parentElement;
+  const name = li.querySelector(".name").textContent;
+  const email = li.querySelector(".email").textContent;
+  const phone = li.querySelector(".phone").textContent;
+  const uid = li.id;
+  document.querySelector(".btn").id = uid;
+  document.querySelector(".btn").value = "Edit";
+  // localStorage.removeItem(email);
   itemList.removeChild(li);
   document.getElementById("name").value = name;
   document.getElementById("email").value = email;
