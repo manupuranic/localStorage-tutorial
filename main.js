@@ -5,6 +5,48 @@ const itemList = document.querySelector(".items");
 
 const del = document.querySelector(".delete");
 
+const showUserOutput = (data) => {
+  let name = data.name;
+  let email = data.email;
+  let phone = data.phone;
+  // add the user details in the list.
+  let newli = document.createElement("li");
+  newli.className = "item";
+
+  let namespan = document.createElement("span");
+  let emailspan = document.createElement("span");
+  let phonespan = document.createElement("span");
+  namespan.className = "name";
+  emailspan.className = "email";
+  phonespan.className = "phone";
+  namespan.appendChild(document.createTextNode(name));
+  emailspan.appendChild(document.createTextNode(email));
+  phonespan.appendChild(document.createTextNode(phone));
+  newli.appendChild(namespan);
+  newli.appendChild(emailspan);
+  newli.appendChild(phonespan);
+
+  // add delete button to the list
+  let delbtn = document.createElement("button");
+  delbtn.className = "delete";
+  delbtn.appendChild(document.createTextNode("Delete"));
+
+  newli.appendChild(delbtn);
+
+  delbtn.addEventListener("click", removeUser);
+
+  // add edit button to the list
+  let editbtn = document.createElement("button");
+  editbtn.className = "edit";
+  editbtn.appendChild(document.createTextNode("Edit"));
+
+  newli.appendChild(editbtn);
+
+  editbtn.addEventListener("click", editUser);
+
+  itemList.appendChild(newli);
+};
+
 const submitHandler = (event) => {
   event.preventDefault();
   const name = document.getElementById("name");
@@ -23,73 +65,33 @@ const submitHandler = (event) => {
       email: email.value,
       phone: phone.value,
     };
-    localStorage.setItem(email.value, JSON.stringify(userDetails));
-    msg.innerText = "Successfully logged the values.";
-    msg.classList.add("success");
+    axios
+      .post(
+        "https://crudcrud.com/api/16ef0de04fbb4c25a7cc20e0b7c11a5f/appointmentdata",
+        userDetails
+      )
+      .then((res) => {
+        showUserOutput(res.data);
+        msg.innerText = "Successfully added the user.";
+        msg.classList.add("success");
+        setTimeout(() => {
+          msg.remove("success");
+        }, 3000);
+      })
+      .catch((err) => {
+        msg.innerText = `Something went wrong: ${err.message}`;
+        msg.classList.add("error");
+        setTimeout(() => {
+          msg.remove("error");
+        }, 3000);
+      });
+    // localStorage.setItem(email.value, JSON.stringify(userDetails));
 
-    // add the user details in the list.
-    let newli = document.createElement("li");
-    newli.className = "item";
-
-    let namespan = document.createElement("span");
-    let emailspan = document.createElement("span");
-    let phonespan = document.createElement("span");
-    namespan.className = "name";
-    emailspan.className = "email";
-    phonespan.className = "phone";
-    namespan.appendChild(document.createTextNode(name.value));
-    emailspan.appendChild(document.createTextNode(email.value));
-    phonespan.appendChild(document.createTextNode(phone.value));
-    newli.appendChild(namespan);
-    newli.appendChild(emailspan);
-    newli.appendChild(phonespan);
-
-    // add delete button to the list
-    let delbtn = document.createElement("button");
-    delbtn.className = "delete";
-    delbtn.appendChild(document.createTextNode("Delete"));
-
-    newli.appendChild(delbtn);
-
-    delbtn.addEventListener("click", removeUser);
-
-    // add edit button to the list
-    let editbtn = document.createElement('button');
-    editbtn.className = "edit";
-    editbtn.appendChild(document.createTextNode("Edit"));
-
-    newli.appendChild(editbtn);
-
-    editbtn.addEventListener("click", editUser);
-
-    itemList.appendChild(newli);
-
-    setTimeout(() => {
-      msg.remove("success");
-    }, 3000);
     name.value = "";
     email.value = "";
     phone.value = "";
   }
 };
-
-btn.addEventListener("click", (e) => {
-  //   e.preventDefault();
-  document.querySelector("body").style.background = "lightgreen";
-  setTimeout(() => {
-    document.querySelector("body").style.background = "white";
-  }, 3000);
-});
-
-// li.addEventListener("mouseout", () => {
-//   li.style.background = "#f4f4f4";
-//   li.style.color = "black";
-// });
-
-// li.addEventListener("mouseover", () => {
-//   li.style.background = "black";
-//   li.style.color = "white";
-// });
 
 const removeUser = (e) => {
   let li = e.target.parentElement;
@@ -108,4 +110,4 @@ const editUser = (e) => {
   document.getElementById("name").value = name;
   document.getElementById("email").value = email;
   document.getElementById("phone").value = phone;
-}
+};
